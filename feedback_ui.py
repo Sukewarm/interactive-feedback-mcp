@@ -62,27 +62,30 @@ def set_dark_title_bar(widget: QWidget, dark_title_bar: bool) -> None:
 
 def get_dark_mode_palette(app: QApplication):
     darkPalette = app.palette()
-    darkPalette.setColor(QPalette.Window, QColor(53, 53, 53))
-    darkPalette.setColor(QPalette.WindowText, Qt.white)
-    darkPalette.setColor(QPalette.Disabled, QPalette.WindowText, QColor(127, 127, 127))
-    darkPalette.setColor(QPalette.Base, QColor(42, 42, 42))
-    darkPalette.setColor(QPalette.AlternateBase, QColor(66, 66, 66))
+    # Base background
+    darkPalette.setColor(QPalette.Window, QColor(36, 36, 36))
+    darkPalette.setColor(QPalette.WindowText, QColor(220, 220, 220))
+    darkPalette.setColor(QPalette.Disabled, QPalette.WindowText, QColor(120, 120, 120))
+    darkPalette.setColor(QPalette.Base, QColor(30, 30, 30))
+    darkPalette.setColor(QPalette.AlternateBase, QColor(48, 48, 48))
     darkPalette.setColor(QPalette.ToolTipBase, QColor(53, 53, 53))
-    darkPalette.setColor(QPalette.ToolTipText, Qt.white)
-    darkPalette.setColor(QPalette.Text, Qt.white)
-    darkPalette.setColor(QPalette.Disabled, QPalette.Text, QColor(127, 127, 127))
+    darkPalette.setColor(QPalette.ToolTipText, QColor(220, 220, 220))
+    darkPalette.setColor(QPalette.Text, QColor(220, 220, 220))
+    darkPalette.setColor(QPalette.Disabled, QPalette.Text, QColor(120, 120, 120))
     darkPalette.setColor(QPalette.Dark, QColor(35, 35, 35))
     darkPalette.setColor(QPalette.Shadow, QColor(20, 20, 20))
     darkPalette.setColor(QPalette.Button, QColor(53, 53, 53))
-    darkPalette.setColor(QPalette.ButtonText, Qt.white)
-    darkPalette.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(127, 127, 127))
-    darkPalette.setColor(QPalette.BrightText, Qt.red)
-    darkPalette.setColor(QPalette.Link, QColor(42, 130, 218))
-    darkPalette.setColor(QPalette.Highlight, QColor(42, 130, 218))
+    darkPalette.setColor(QPalette.ButtonText, QColor(220, 220, 220))
+    darkPalette.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(120, 120, 120))
+    darkPalette.setColor(QPalette.BrightText, QColor(255, 255, 255))
+    # Orange accent
+    accent = QColor(255, 136, 0)
+    darkPalette.setColor(QPalette.Link, accent)
+    darkPalette.setColor(QPalette.Highlight, accent)
     darkPalette.setColor(QPalette.Disabled, QPalette.Highlight, QColor(80, 80, 80))
-    darkPalette.setColor(QPalette.HighlightedText, Qt.white)
+    darkPalette.setColor(QPalette.HighlightedText, QColor(0, 0, 0))
     darkPalette.setColor(QPalette.Disabled, QPalette.HighlightedText, QColor(127, 127, 127))
-    darkPalette.setColor(QPalette.PlaceholderText, QColor(127, 127, 127))
+    darkPalette.setColor(QPalette.PlaceholderText, QColor(130, 130, 130))
     return darkPalette
 
 def kill_tree(process: subprocess.Popen):
@@ -554,6 +557,38 @@ def feedback_ui(project_directory: str, prompt: str, output_file: Optional[str] 
     app = QApplication.instance() or QApplication()
     app.setPalette(get_dark_mode_palette(app))
     app.setStyle("Fusion")
+    app.setStyleSheet(
+        """
+        QWidget {
+            background-color: #242424;
+            color: #d0d0d0;
+        }
+        QGroupBox {
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            margin-top: 10px;
+            padding: 8px;
+        }
+        QGroupBox::title {
+            subcontrol-origin: margin;
+            left: 10px;
+            padding: 0 3px 0 3px;
+        }
+        QPushButton {
+            background-color: #ff8800;
+            color: #000000;
+            border-radius: 4px;
+            padding: 4px 8px;
+        }
+        QPushButton:hover { background-color: #ffa53b; }
+        QPushButton:pressed { background-color: #cc6f00; }
+        QLineEdit, QTextEdit {
+            background-color: #1e1e1e;
+            border: 1px solid #3a3a3a;
+            border-radius: 4px;
+        }
+        """
+    )
     ui = FeedbackUI(project_directory, prompt)
     result = ui.run()
 
