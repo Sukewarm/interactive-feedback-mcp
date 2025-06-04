@@ -5,8 +5,7 @@ Check out [dotcursorrules.com](https://dotcursorrules.com/) for more AI developm
 
 Simple [MCP Server](https://modelcontextprotocol.io/) to enable a human-in-the-loop workflow in AI-assisted development tools like [Cursor](https://www.cursor.com). This server allows you to run commands, view their output, and provide textual feedback directly to the AI. It is also compatible with [Cline](https://cline.bot) and [Windsurf](https://windsurf.com).
 
-![Interactive Feedback UI - Main View](https://github.com/noopstudios/interactive-feedback-mcp/blob/main/.github/interactive_feedback_1.jpg?raw=true)
-![Interactive Feedback UI - Command Section Open](https://github.com/noopstudios/interactive-feedback-mcp/blob/main/.github/interactive_feedback_2.jpg)
+![Interactive Feedback UI - Main View](https://github.com/Sukewarm/interactive-feedback-mcp/blob/main/.github/feedback-ui.png?raw=true)
 
 ## Prompt Engineering
 
