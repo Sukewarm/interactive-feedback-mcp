@@ -79,7 +79,7 @@ def get_dark_mode_palette(app: QApplication):
     darkPalette.setColor(QPalette.Disabled, QPalette.ButtonText, QColor(120, 120, 120))
     darkPalette.setColor(QPalette.BrightText, QColor(255, 255, 255))
     # Orange accent
-    accent = QColor(255, 136, 0)
+    accent = QColor(0, 122, 204)  # VS Code-like Blue (#007ACC)
     darkPalette.setColor(QPalette.Link, accent)
     darkPalette.setColor(QPalette.Highlight, accent)
     darkPalette.setColor(QPalette.Disabled, QPalette.Highlight, QColor(80, 80, 80))
@@ -565,7 +565,7 @@ def feedback_ui(project_directory: str, prompt: str, output_file: Optional[str] 
         }
         QGroupBox {
             border: 1px solid #3a3a3a;
-            border-radius: 8px;
+            border-radius: 12px; /* Increased border-radius */
             margin-top: 10px;
             padding: 8px;
         }
@@ -575,17 +575,17 @@ def feedback_ui(project_directory: str, prompt: str, output_file: Optional[str] 
             padding: 0 3px 0 3px;
         }
         QPushButton {
-            background-color: #ff8800;
-            color: #000000;
-            border-radius: 4px;
+            background-color: #007ACC; /* VS Code-like Blue */
+            color: #FFFFFF; /* White text */
+            border-radius: 8px;
             padding: 4px 8px;
         }
-        QPushButton:hover { background-color: #ffa53b; }
-        QPushButton:pressed { background-color: #cc6f00; }
+        QPushButton:hover { background-color: #0090F0; } /* Lighter blue */
+        QPushButton:pressed { background-color: #005A9E; } /* Darker blue */
         QLineEdit, QTextEdit {
             background-color: #1e1e1e;
             border: 1px solid #3a3a3a;
-            border-radius: 4px;
+            border-radius: 8px; /* Increased border-radius */
         }
         """
     )
