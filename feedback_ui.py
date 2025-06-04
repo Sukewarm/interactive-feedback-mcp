@@ -335,6 +335,14 @@ class FeedbackUI(QMainWindow):
         console_layout_internal = QVBoxLayout(console_group)
         console_group.setMinimumHeight(200)
 
+        # Clear button placed above the log text so it is always visible
+        button_layout = QHBoxLayout()
+        self.clear_button = QPushButton("&Clear")
+        self.clear_button.clicked.connect(self.clear_logs)
+        button_layout.addStretch()
+        button_layout.addWidget(self.clear_button)
+        console_layout_internal.addLayout(button_layout)
+
         # Log text area
         self.log_text = QTextEdit()
         self.log_text.setReadOnly(True)
@@ -342,14 +350,6 @@ class FeedbackUI(QMainWindow):
         font.setPointSize(9)
         self.log_text.setFont(font)
         console_layout_internal.addWidget(self.log_text)
-
-        # Clear button
-        button_layout = QHBoxLayout()
-        self.clear_button = QPushButton("&Clear")
-        self.clear_button.clicked.connect(self.clear_logs)
-        button_layout.addStretch()
-        button_layout.addWidget(self.clear_button)
-        console_layout_internal.addLayout(button_layout)
         
         command_layout.addWidget(console_group)
 
@@ -555,8 +555,14 @@ def get_project_settings_group(project_dir: str) -> str:
 
 def feedback_ui(project_directory: str, prompt: str, output_file: Optional[str] = None) -> Optional[FeedbackResult]:
     app = QApplication.instance() or QApplication()
+
+    # macOS tweaks: use native style and keep dark palette
+    if sys.platform == "darwin":
+        app.setStyle("macintosh")
+    else:
+        app.setStyle("Fusion")
+
     app.setPalette(get_dark_mode_palette(app))
-    app.setStyle("Fusion")
     app.setStyleSheet(
         """
         QWidget {
