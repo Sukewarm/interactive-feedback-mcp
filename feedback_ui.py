@@ -414,7 +414,7 @@ class FeedbackUI(QMainWindow):
         new_height = self.centralWidget().sizeHint().height()
         if self.command_group.isVisible() and self.command_group.layout().sizeHint().height() > 0 :
              # if command group became visible and has content, ensure enough height
-             min_content_height = self.command_group.layout().sizeHint().height() + self.feedback_group.minimumHeight() + self.toggle_command_button.height() + layout().spacing() * 2
+             min_content_height = self.command_group.layout().sizeHint().height() + self.feedback_group.minimumHeight() + self.toggle_command_button.height() + self.centralWidget().layout().spacing() * 2
              new_height = max(new_height, min_content_height)
 
         current_width = self.width()
