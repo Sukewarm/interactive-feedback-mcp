@@ -238,11 +238,14 @@ class FeedbackUI(QMainWindow):
         if geometry:
             self.restoreGeometry(geometry)
         else:
-            self.resize(800, 600)
+            self.resize(900, 700)
             screen = QApplication.primaryScreen().geometry()
-            x = (screen.width() - 800) // 2
-            y = (screen.height() - 600) // 2
+            x = (screen.width() - 900) // 2
+            y = (screen.height() - 700) // 2
             self.move(x, y)
+        
+        # Set minimum window size
+        self.setMinimumSize(600, 500)
         state = self.settings.value("windowState")
         if state:
             self.restoreState(state)
@@ -288,19 +291,25 @@ class FeedbackUI(QMainWindow):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
+        layout.setSpacing(12)
+        layout.setContentsMargins(16, 16, 16, 16)
 
         # Toggle Command Section Button
         self.toggle_command_button = QPushButton("Show Command Section")
+        self.toggle_command_button.setObjectName("toggleButton")
         self.toggle_command_button.clicked.connect(self._toggle_command_section)
         layout.addWidget(self.toggle_command_button)
 
         # Command section
         self.command_group = QGroupBox("Command")
         command_layout = QVBoxLayout(self.command_group)
+        command_layout.setSpacing(12)
+        command_layout.setContentsMargins(16, 20, 16, 16)
 
         # Working directory label
         formatted_path = self._format_windows_path(self.project_directory)
         working_dir_label = QLabel(f"Working directory: {formatted_path}")
+        working_dir_label.setProperty("class", "workingDir")
         command_layout.addWidget(working_dir_label)
 
         # Command input row
@@ -323,6 +332,7 @@ class FeedbackUI(QMainWindow):
         self.auto_check.stateChanged.connect(self._update_config)
 
         save_button = QPushButton("&Save Configuration")
+        save_button.setObjectName("saveButton")
         save_button.clicked.connect(self._save_config)
 
         auto_layout.addWidget(self.auto_check)
@@ -333,6 +343,8 @@ class FeedbackUI(QMainWindow):
         # Console section (now part of command_group)
         console_group = QGroupBox("Console")
         console_layout_internal = QVBoxLayout(console_group)
+        console_layout_internal.setSpacing(8)
+        console_layout_internal.setContentsMargins(12, 16, 12, 12)
         console_group.setMinimumHeight(200)
 
         # Log text area
@@ -346,6 +358,7 @@ class FeedbackUI(QMainWindow):
         # Clear button
         button_layout = QHBoxLayout()
         self.clear_button = QPushButton("&Clear")
+        self.clear_button.setObjectName("clearButton")
         self.clear_button.clicked.connect(self.clear_logs)
         button_layout.addStretch()
         button_layout.addWidget(self.clear_button)
@@ -359,18 +372,21 @@ class FeedbackUI(QMainWindow):
         # Feedback section with adjusted height
         self.feedback_group = QGroupBox("Feedback")
         feedback_layout = QVBoxLayout(self.feedback_group)
+        feedback_layout.setSpacing(12)
+        feedback_layout.setContentsMargins(16, 20, 16, 16)
 
         # Short description label (from self.prompt)
         self.description_label = QLabel(self.prompt)
+        self.description_label.setProperty("class", "description")
         self.description_label.setWordWrap(True)
         feedback_layout.addWidget(self.description_label)
 
         self.feedback_text = FeedbackTextEdit()
         font_metrics = self.feedback_text.fontMetrics()
         row_height = font_metrics.height()
-        # Calculate height for 5 lines + some padding for margins
+        # Calculate height for 4 lines + some padding for margins
         padding = self.feedback_text.contentsMargins().top() + self.feedback_text.contentsMargins().bottom() + 5 # 5 is extra vertical padding
-        self.feedback_text.setMinimumHeight(5 * row_height + padding)
+        self.feedback_text.setMinimumHeight(4 * row_height + padding)
 
         self.feedback_text.setPlaceholderText("Enter your feedback here (Ctrl+Enter to submit)")
         submit_button = QPushButton("&Send Feedback (Ctrl+Enter)")
@@ -388,13 +404,9 @@ class FeedbackUI(QMainWindow):
 
         # Credits/Contact Label
         contact_label = QLabel('Need to improve? Contact Fábio Ferreira on <a href="https://x.com/fabiomlferreira">X.com</a> or visit <a href="https://dotcursorrules.com/">dotcursorrules.com</a>')
+        contact_label.setProperty("class", "contact")
         contact_label.setOpenExternalLinks(True)
         contact_label.setAlignment(Qt.AlignCenter)
-        # Optionally, make font a bit smaller and less prominent
-        # contact_label_font = contact_label.font()
-        # contact_label_font.setPointSize(contact_label_font.pointSize() - 1)
-        # contact_label.setFont(contact_label_font)
-        contact_label.setStyleSheet("font-size: 9pt; color: #cccccc;") # Light gray for dark theme
         layout.addWidget(contact_label)
 
     def _toggle_command_section(self):
@@ -559,33 +571,202 @@ def feedback_ui(project_directory: str, prompt: str, output_file: Optional[str] 
     app.setStyle("Fusion")
     app.setStyleSheet(
         """
+        /* 主窗口样式 - Apple风格 */
+        QMainWindow {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #1a1a1a, stop: 0.5 #0f0f0f, stop: 1 #000000);
+        }
+        
         QWidget {
-            background-color: #242424;
-            color: #d0d0d0;
+            background-color: transparent;
+            color: #ffffff;
+            font-family: 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
+            font-weight: 400;
         }
+        
+        /* 组框样式 - Apple卡片设计 */
         QGroupBox {
-            border: 1px solid #3a3a3a;
-            border-radius: 12px; /* Increased border-radius */
-            margin-top: 10px;
-            padding: 8px;
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 rgba(30, 30, 30, 0.9), stop: 1 rgba(20, 20, 20, 0.9));
+            border: 1px solid rgba(60, 60, 60, 0.5);
+            border-radius: 16px;
+            margin-top: 8px;
+            padding: 16px;
+            font-weight: 500;
+            font-size: 13px;
         }
+        
         QGroupBox::title {
             subcontrol-origin: margin;
-            left: 10px;
-            padding: 0 3px 0 3px;
+            left: 16px;
+            top: 4px;
+            padding: 0 8px 0 8px;
+            color: #ffffff;
+            font-weight: 600;
+            background-color: transparent;
         }
+        
+        /* 按钮样式 - Apple统一蓝色 */
         QPushButton {
-            background-color: #007ACC; /* VS Code-like Blue */
-            color: #FFFFFF; /* White text */
-            border-radius: 8px;
-            padding: 4px 8px;
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #007AFF, stop: 1 #0051D5);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 13px;
+            min-height: 18px;
         }
-        QPushButton:hover { background-color: #0090F0; } /* Lighter blue */
-        QPushButton:pressed { background-color: #005A9E; } /* Darker blue */
+        
+        QPushButton:hover {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #1E88E5, stop: 1 #1565C0);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        QPushButton:pressed {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #0051D5, stop: 1 #003C9B);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        QPushButton:disabled {
+            background: #404040;
+            color: #808080;
+        }
+        
+        /* 特殊按钮样式 - Apple灰色系 */
+        QPushButton#toggleButton {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #333333, stop: 1 #1a1a1a);
+            border: 1px solid #444444;
+            color: #ffffff;
+        }
+        
+        QPushButton#toggleButton:hover {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #444444, stop: 1 #222222);
+            border: 1px solid #555555;
+        }
+        
+        QPushButton#saveButton {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #007AFF, stop: 1 #0051D5);
+        }
+        
+        QPushButton#saveButton:hover {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #1E88E5, stop: 1 #1565C0);
+        }
+        
+        QPushButton#clearButton {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #007AFF, stop: 1 #0051D5);
+        }
+        
+        QPushButton#clearButton:hover {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #1E88E5, stop: 1 #1565C0);
+        }
+        
+        /* 输入框样式 - Apple现代设计 */
         QLineEdit, QTextEdit {
-            background-color: #1e1e1e;
-            border: 1px solid #3a3a3a;
-            border-radius: 8px; /* Increased border-radius */
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #1a1a1a, stop: 1 #0f0f0f);
+            border: 1px solid #333333;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #ffffff;
+            selection-background-color: #007AFF;
+        }
+        
+        QLineEdit:focus, QTextEdit:focus {
+            border: 2px solid #007AFF;
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #222222, stop: 1 #111111);
+        }
+        
+        QTextEdit {
+            padding: 16px;
+            line-height: 1.4;
+        }
+        
+        /* 复选框样式 - Apple风格 */
+        QCheckBox {
+            spacing: 8px;
+            color: #ffffff;
+            font-size: 13px;
+        }
+        
+        QCheckBox::indicator {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid #333333;
+            background: #1a1a1a;
+        }
+        
+        QCheckBox::indicator:checked {
+            background: #007AFF;
+            border: 2px solid #007AFF;
+            image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOSIgdmlld0JveD0iMCAwIDEyIDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDQuNUw0LjUgOEwxMSAxIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K);
+        }
+        
+        QCheckBox::indicator:hover {
+            border: 2px solid #007AFF;
+        }
+        
+        /* 标签样式 - Apple字体层次 */
+        QLabel {
+            color: #ffffff;
+            font-size: 13px;
+        }
+        
+        QLabel[class="description"] {
+            font-size: 14px;
+            color: #cccccc;
+            padding: 8px 0;
+            line-height: 1.5;
+        }
+        
+        QLabel[class="contact"] {
+            font-size: 11px;
+            color: #888888;
+            padding: 8px;
+        }
+        
+        QLabel[class="workingDir"] {
+            font-size: 12px;
+            color: #cccccc;
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', 'Courier New', monospace;
+            font-weight: 400;
+        }
+        
+        /* 滚动条样式 - Apple简约设计 */
+        QScrollBar:vertical {
+            background: #1a1a1a;
+            width: 12px;
+            border-radius: 6px;
+        }
+        
+        QScrollBar::handle:vertical {
+            background: #444444;
+            border-radius: 6px;
+            min-height: 20px;
+        }
+        
+        QScrollBar::handle:vertical:hover {
+            background: #555555;
+        }
+        
+        QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+            height: 0px;
         }
         """
     )
